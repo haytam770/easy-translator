@@ -15,11 +15,16 @@ while True:
     lang_code = client_socket.recv(1024).decode()
 
     try:
-        translated_word = GoogleTranslator(source='auto', target=lang_code).translate(word)
+        base_code = lang_code.split('-')[0]
+        if base_code == "zh":
+            base_code = "zh-CN"
+
+        translated_word = GoogleTranslator(source='auto', target=base_code).translate(word)
         if not translated_word:
             translated_word = "Translation error: Empty result"
+
     except Exception as e:
         translated_word = f"Translation error: {e}"
 
-    client_socket.send(translated_word.encode())
+    client_socket.send(translated_word.encode()) 
     client_socket.close()
